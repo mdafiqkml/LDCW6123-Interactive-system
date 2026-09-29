@@ -1,30 +1,28 @@
-// logic.h
-// Interface between the interaction layer (Coding B - MohammadHossein)
-// and the core logic (Coding A - Soh Eu Zen).
-//
-// main.cpp only calls the function declared here.
-// Soh implements it in logic.cpp.
-//
-// NOTE: The parameters below are a PROPOSED interface.
-// Update the name, parameters and ranges once Soh confirms his design.
-
 #ifndef LOGIC_H
 #define LOGIC_H
-
 #include <string>
-
-// Valid input ranges shared by both sides.
-// main.cpp validates against these before calling runCoreLogic(),
-// so the core logic always receives valid values.
-const int    CATEGORY_MIN = 1;
-const int    CATEGORY_MAX = 3;
-const double VALUE_MIN    = 0.0;
-const double VALUE_MAX    = 1000.0;
-
-// Core logic entry point (implemented by Coding A).
-// selectedCategory: an already-validated option in [CATEGORY_MIN, CATEGORY_MAX]
-// userValue:        an already-validated number in [VALUE_MIN, VALUE_MAX]
-// Returns:          the result text to display to the user.
-std::string runCoreLogic(int selectedCategory, double userValue);
-
+#include <vector>
+// Integer sen avoids rounding. This classroom cap is not a TNG rule.
+constexpr int MAX_BALANCE_SEN = 100000;
+struct Transaction {
+    int id;
+    std::string type, merchant;
+    int amountSen, balanceAfterSen;
+};
+struct Result { bool success; std::string message; };
+bool parseAmount(const std::string& text, int& amountSen);
+std::string formatMoney(int amountSen);
+std::string merchantName(int choice);
+class Wallet {
+public:
+    int balance() const { return balanceSen_; }
+    const std::vector<Transaction>& history() const { return transactions_; }
+    Result topUp(int amountSen);
+    Result pay(int merchant, int amountSen);
+private:
+    int balanceSen_ = 0;
+    std::vector<Transaction> transactions_;
+    Result record(const std::string& type, const std::string& merchant,
+                  int amountSen, int newBalanceSen);
+};
 #endif
