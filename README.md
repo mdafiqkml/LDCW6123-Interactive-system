@@ -52,5 +52,3 @@ git log --format=fuller
 Keep the hidden `.git` directory when copying the project. The original assignment's `--online` is a typo; the valid flag is `--oneline`.
 The two supplied commits are preserved. New commits use the identity **Codex Assistant** and current timestamps. These accurately record this AI-assisted continuation, not historical work or contributions by particular students. The original commits also contain a Claude co-author credit.
 
-## Before submission
-Read `../START_HERE.md`. Complete individual declarations truthfully, review the work, record your own group presentation (maximum 18 minutes), and add sharing links. Links are intentionally blank at the group leader's request. Do not claim the project is submitted or lecturer access is verified until those steps are completed.
