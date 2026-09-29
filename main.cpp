@@ -1,261 +1,111 @@
-// main.cpp
-// Interaction layer - Coding B (MohammadHossein)
-//
-// Responsibilities:
-//   - Main menu and navigation
-//   - Reading and validating user input
-//   - Calling the core logic (Coding A, see logic.h)
-//   - Displaying results
-//   - Repeat / Exit behaviour
-//
-// Build: g++ -std=c++17 -Wall -Wextra -pedantic -o program main.cpp logic.cpp
-
-#include <cmath>
+// Interaction layer continued from the supplied main.cpp.
+// Original trim, line input and integer-validation approach retained.
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>
 #include <string>
-
 #include "logic.h"
 
-// ---------------------------------------------------------------
-// Program text (update once the Part 1 technology is confirmed)
-// ---------------------------------------------------------------
-const std::string PROGRAM_TITLE = "PROGRAM NAME";          // TODO: e.g. "NETFLIX MOVIE ASSISTANT"
-const std::string FEATURE_NAME  = "Run Main Feature";      // TODO: e.g. "Get a Movie Recommendation"
-const std::string ABOUT_TEXT    =
-    "This program is connected to the technology studied in Part 1.\n"
-    "TODO: describe the technology and what this program simulates.";
-
-const int MENU_MAIN_FEATURE = 1;
-const int MENU_ABOUT        = 2;
-const int MENU_EXIT         = 3;
-
-// ---------------------------------------------------------------
-// Input helpers
-// ---------------------------------------------------------------
-
-// Removes spaces and tabs from both ends of the text.
 std::string trim(const std::string& text)
 {
     const std::string whitespace = " \t\r\n";
-    const std::size_t start = text.find_first_not_of(whitespace);
-    if (start == std::string::npos)
-    {
-        return "";
-    }
-    const std::size_t end = text.find_last_not_of(whitespace);
-    return text.substr(start, end - start + 1);
+    const auto start = text.find_first_not_of(whitespace);
+    if (start == std::string::npos) return "";
+    return text.substr(start, text.find_last_not_of(whitespace) - start + 1);
 }
-
-// Reads one full line. If input has ended (Ctrl+Z / Ctrl+D or end of a
-// piped file), the program exits cleanly instead of looping forever.
 std::string readLineOrExit()
 {
     std::string line;
-    if (!std::getline(std::cin, line))
-    {
-        std::cout << "\n\nNo more input detected. Exiting the program. Goodbye!\n";
+    if (!std::getline(std::cin, line)) {
+        std::cout << "\nNo more input. Session ended; demo data is not saved.\n";
         std::exit(0);
     }
     return trim(line);
 }
-
-// Asks until the user enters a whole number between minValue and maxValue.
-// Rejects empty input, text ("abc"), mixed input ("12abc") and decimals ("3.5").
-int readIntInRange(const std::string& prompt, int minValue, int maxValue)
+int readIntInRange(const std::string& prompt, int minimum, int maximum)
 {
-    while (true)
-    {
+    while (true) {
         std::cout << prompt;
-        const std::string userInput = readLineOrExit();
-
-        if (userInput.empty())
-        {
-            std::cout << "Input cannot be empty. Please try again.\n\n";
+        const auto text = readLineOrExit();
+        if (text.empty() || text.find_first_not_of("0123456789") != std::string::npos) {
+            std::cout << "Invalid choice. Enter a whole number.\n";
             continue;
         }
-
-        int number = 0;
-        std::size_t charactersRead = 0;
-        try
-        {
-            number = std::stoi(userInput, &charactersRead);
-        }
-        catch (const std::invalid_argument&)
-        {
-            std::cout << "Invalid input. Please enter a valid whole number.\n\n";
-            continue;
-        }
-        catch (const std::out_of_range&)
-        {
-            std::cout << "That number is too large. Please enter a number between "
-                      << minValue << " and " << maxValue << ".\n\n";
-            continue;
-        }
-
-        if (charactersRead != userInput.size())
-        {
-            std::cout << "Invalid input. Please enter a valid whole number.\n\n";
-            continue;
-        }
-
-        if (number < minValue || number > maxValue)
-        {
-            std::cout << "Value out of range. Please enter a number between "
-                      << minValue << " and " << maxValue << ".\n\n";
-            continue;
-        }
-
-        return number;
+        try {
+            const int value = std::stoi(text);
+            if (value >= minimum && value <= maximum) return value;
+        } catch (const std::exception&) { }
+        std::cout << "Choose a number from " << minimum << " to " << maximum << ".\n";
     }
 }
-
-// Asks until the user enters a number (decimals allowed) between minValue and maxValue.
-double readDoubleInRange(const std::string& prompt, double minValue, double maxValue)
+int readAmount()
 {
-    while (true)
-    {
-        std::cout << prompt;
-        const std::string userInput = readLineOrExit();
-
-        if (userInput.empty())
-        {
-            std::cout << "Input cannot be empty. Please try again.\n\n";
-            continue;
-        }
-
-        double number = 0.0;
-        std::size_t charactersRead = 0;
-        try
-        {
-            number = std::stod(userInput, &charactersRead);
-        }
-        catch (const std::exception&)
-        {
-            std::cout << "Invalid input. Please enter a valid number.\n\n";
-            continue;
-        }
-
-        // Reject leftovers like "12abc" and special values like "nan" or "inf".
-        if (charactersRead != userInput.size() || !std::isfinite(number))
-        {
-            std::cout << "Invalid input. Please enter a valid number.\n\n";
-            continue;
-        }
-
-        if (number < minValue || number > maxValue)
-        {
-            std::cout << "Value out of range. Please enter a number between "
-                      << minValue << " and " << maxValue << ".\n\n";
-            continue;
-        }
-
-        return number;
+    while (true) {
+        std::cout << "Amount in RM (0.01-1000.00, up to 2 decimal places): ";
+        int amount = 0;
+        if (parseAmount(readLineOrExit(), amount)) return amount;
+        std::cout << "Invalid amount. Example: 12.50. No signs or extra text.\n";
     }
 }
-
-// ---------------------------------------------------------------
-// Output helpers
-// ---------------------------------------------------------------
-
-void printDivider()
+bool confirm(const std::string& action, int amount)
 {
-    std::cout << "=================================================\n";
+    std::cout << action << " " << formatMoney(amount) << "?\n";
+    return readIntInRange("1. Confirm  2. Cancel: ", 1, 2) == 1;
 }
-
-void showMainMenu()
+void showHistory(const Wallet& wallet)
 {
-    std::cout << "\n";
-    printDivider();
-    std::cout << "   " << PROGRAM_TITLE << "\n";
-    printDivider();
-    std::cout << "  " << MENU_MAIN_FEATURE << ". " << FEATURE_NAME << "\n";
-    std::cout << "  " << MENU_ABOUT        << ". About this program\n";
-    std::cout << "  " << MENU_EXIT         << ". Exit\n";
-    printDivider();
+    std::cout << "\nSESSION TRANSACTION HISTORY\n";
+    if (wallet.history().empty()) std::cout << "No successful transactions yet.\n";
+    for (const auto& entry : wallet.history()) {
+        std::cout << '#' << entry.id << " | " << entry.type << " | " << entry.merchant
+                  << " | " << formatMoney(entry.amountSen)
+                  << " | Balance " << formatMoney(entry.balanceAfterSen) << '\n';
+    }
 }
-
 void showAbout()
 {
-    std::cout << "\n--------------- ABOUT ---------------\n";
-    std::cout << ABOUT_TEXT << "\n";
-    std::cout << "-------------------------------------\n";
+    std::cout << "\nInspired by Touch 'n Go eWallet cashless merchant payments.\n"
+              << "Offline educational simulation; no real money or official affiliation.\n"
+              << "Merchants are fictional. No QR scanner, bank connection or login.\n"
+              << "Balance limit RM1000.00 is a classroom rule, not TNG policy.\n"
+              << "All session data resets when you exit.\n"
+              << "Winston connection: cashless convenience supports adoption;\n"
+              << "trust, access and institutional controls shape actual use.\n";
 }
-
-void displayResult(const std::string& result)
-{
-    std::cout << "\n------------------ RESULT ------------------\n";
-    std::cout << result << "\n";
-    std::cout << "--------------------------------------------\n";
-}
-
-// ---------------------------------------------------------------
-// Main feature: get input -> validate -> call core logic -> display
-// ---------------------------------------------------------------
-
-void runMainFeature()
-{
-    std::cout << "\n>>> " << FEATURE_NAME << "\n\n";
-
-    // TODO: replace these prompts with the real inputs Soh's logic needs.
-    std::cout << "Select a category:\n";
-    std::cout << "  1. Category A\n";
-    std::cout << "  2. Category B\n";
-    std::cout << "  3. Category C\n";
-    const int selectedCategory =
-        readIntInRange("Enter your choice (1-3): ", CATEGORY_MIN, CATEGORY_MAX);
-
-    const double userValue =
-        readDoubleInRange("Enter a value (0-1000): ", VALUE_MIN, VALUE_MAX);
-
-    // Integration point: all validation is done, now hand over to Coding A.
-    const std::string result = runCoreLogic(selectedCategory, userValue);
-
-    displayResult(result);
-}
-
-// Returns true if the user wants another operation.
-bool askToRepeat()
-{
-    std::cout << "\nWould you like to perform another operation?\n";
-    std::cout << "  1. Yes\n";
-    std::cout << "  2. No\n";
-    const int answer = readIntInRange("Choose an option (1-2): ", 1, 2);
-    return answer == 1;
-}
-
-// ---------------------------------------------------------------
-// Program entry
-// ---------------------------------------------------------------
-
 int main()
 {
-    bool keepRunning = true;
-
-    while (keepRunning)
-    {
-        showMainMenu();
-        const int userChoice =
-            readIntInRange("Choose an option (1-3): ", MENU_MAIN_FEATURE, MENU_EXIT);
-
-        switch (userChoice)
-        {
-            case MENU_MAIN_FEATURE:
-                runMainFeature();
-                keepRunning = askToRepeat();
+    Wallet wallet;
+    std::cout << "TNG-INSPIRED CAMPUS WALLET SIMULATOR\n"
+              << "Demo only. Starting balance RM0.00. No real payments.\n";
+    bool running = true;
+    while (running) {
+        std::cout << "\n==================================================\n"
+                  << "Balance: " << formatMoney(wallet.balance()) << '\n'
+                  << "1. Top up demo funds\n2. Pay a demo merchant\n"
+                  << "3. View balance\n4. View transaction history\n"
+                  << "5. About this simulation\n6. Exit\n";
+        switch (readIntInRange("Choose (1-6): ", 1, 6)) {
+            case 1: {
+                const int amount = readAmount();
+                if (confirm("Top up", amount)) std::cout << wallet.topUp(amount).message << '\n';
+                else std::cout << "Cancelled. Balance unchanged.\n";
                 break;
-
-            case MENU_ABOUT:
-                showAbout();
+            }
+            case 2: {
+                std::cout << "1. Campus Cafe\n2. Campus Bookshop\n3. Campus Mini Mart\n";
+                const int merchant = readIntInRange("Choose merchant (1-3): ", 1, 3);
+                const int amount = readAmount();
+                if (confirm("Pay " + merchantName(merchant), amount))
+                    std::cout << wallet.pay(merchant, amount).message << '\n';
+                else std::cout << "Cancelled. Balance unchanged.\n";
                 break;
-
-            case MENU_EXIT:
-                keepRunning = false;
-                break;
+            }
+            case 3: std::cout << "Available balance: " << formatMoney(wallet.balance()) << '\n'; break;
+            case 4: showHistory(wallet); break;
+            case 5: showAbout(); break;
+            case 6: running = false; break;
         }
     }
-
-    std::cout << "\nThank you for using the program. Goodbye!\n";
+    std::cout << "Goodbye. Session ended; demo data is not saved.\n";
     return 0;
 }
