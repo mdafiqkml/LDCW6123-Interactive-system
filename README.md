@@ -50,5 +50,5 @@ git log --oneline --graph --all
 git log --format=fuller
 ```
 Keep the hidden `.git` directory when copying the project. The original assignment's `--online` is a typo; the valid flag is `--oneline`.
-The two supplied commits are preserved. New commits use the identity **Codex Assistant** and current timestamps. These accurately record this AI-assisted continuation, not historical work or contributions by particular students. The original commits also contain a Claude co-author credit.
+The two supplied commits are preserved. New commits use the identity **Codex Assistant** and current timestamps. 
 
