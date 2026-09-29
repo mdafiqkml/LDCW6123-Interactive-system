@@ -2,3 +2,10 @@
 program
 program.exe
 *.o
+wallet.exe
+wallet_tests.exe
+*.obj
+*.pdb
+*.ilk
+.zig-cache/
+/evidence/git-log.txt

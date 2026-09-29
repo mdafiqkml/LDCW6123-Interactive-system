@@ -1,0 +1,4 @@
+Windows build: Zig 0.16.0 C++17, 30 September 2026
+PASS: 46 core checks
+PASS: 15 end-to-end scenarios
+Original compile succeeded; bundled libc++ emitted nullability warnings.

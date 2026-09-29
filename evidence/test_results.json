@@ -1,0 +1,62 @@
+[
+  {
+    "case": "normal_payment",
+    "result": "PASS"
+  },
+  {
+    "case": "insufficient_funds",
+    "result": "PASS"
+  },
+  {
+    "case": "cancel_topup",
+    "result": "PASS"
+  },
+  {
+    "case": "cancel_payment",
+    "result": "PASS"
+  },
+  {
+    "case": "malformed_input",
+    "result": "PASS"
+  },
+  {
+    "case": "cap",
+    "result": "PASS"
+  },
+  {
+    "case": "cent_precision",
+    "result": "PASS"
+  },
+  {
+    "case": "empty_history",
+    "result": "PASS"
+  },
+  {
+    "case": "about",
+    "result": "PASS"
+  },
+  {
+    "case": "eof_menu",
+    "result": "PASS"
+  },
+  {
+    "case": "eof_amount",
+    "result": "PASS"
+  },
+  {
+    "case": "eof_confirmation",
+    "result": "PASS"
+  },
+  {
+    "case": "whitespace",
+    "result": "PASS"
+  },
+  {
+    "case": "invalid_merchant",
+    "result": "PASS"
+  },
+  {
+    "case": "invalid_confirmation",
+    "result": "PASS"
+  }
+]

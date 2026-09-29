@@ -1,0 +1,60 @@
+INPUT
+1
+100
+1
+2
+1
+10
+2
+3
+6
+
+ACTUAL OUTPUT
+TNG-INSPIRED CAMPUS WALLET SIMULATOR
+Demo only. Starting balance RM0.00. No real payments.
+
+==================================================
+Balance: RM0.00
+1. Top up demo funds
+2. Pay a demo merchant
+3. View balance
+4. View transaction history
+5. About this simulation
+6. Exit
+Choose (1-6): Amount in RM (0.01-1000.00, up to 2 decimal places): Top up RM100.00?
+1. Confirm  2. Cancel: Transaction #1 | TOP UP | Demo funds | RM100.00
+Balance: RM100.00
+
+==================================================
+Balance: RM100.00
+1. Top up demo funds
+2. Pay a demo merchant
+3. View balance
+4. View transaction history
+5. About this simulation
+6. Exit
+Choose (1-6): 1. Campus Cafe
+2. Campus Bookshop
+3. Campus Mini Mart
+Choose merchant (1-3): Amount in RM (0.01-1000.00, up to 2 decimal places): Pay Campus Cafe RM10.00?
+1. Confirm  2. Cancel: Cancelled. Balance unchanged.
+
+==================================================
+Balance: RM100.00
+1. Top up demo funds
+2. Pay a demo merchant
+3. View balance
+4. View transaction history
+5. About this simulation
+6. Exit
+Choose (1-6): Available balance: RM100.00
+
+==================================================
+Balance: RM100.00
+1. Top up demo funds
+2. Pay a demo merchant
+3. View balance
+4. View transaction history
+5. About this simulation
+6. Exit
+Choose (1-6): Goodbye. Session ended; demo data is not saved.

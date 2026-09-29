@@ -1,0 +1,47 @@
+INPUT
+abc
+1.5
+9
+1
+nan
+-1
+1.001
+12abc
+0
+10
+1
+6
+
+ACTUAL OUTPUT
+TNG-INSPIRED CAMPUS WALLET SIMULATOR
+Demo only. Starting balance RM0.00. No real payments.
+
+==================================================
+Balance: RM0.00
+1. Top up demo funds
+2. Pay a demo merchant
+3. View balance
+4. View transaction history
+5. About this simulation
+6. Exit
+Choose (1-6): Invalid choice. Enter a whole number.
+Choose (1-6): Invalid choice. Enter a whole number.
+Choose (1-6): Choose a number from 1 to 6.
+Choose (1-6): Amount in RM (0.01-1000.00, up to 2 decimal places): Invalid amount. Example: 12.50. No signs or extra text.
+Amount in RM (0.01-1000.00, up to 2 decimal places): Invalid amount. Example: 12.50. No signs or extra text.
+Amount in RM (0.01-1000.00, up to 2 decimal places): Invalid amount. Example: 12.50. No signs or extra text.
+Amount in RM (0.01-1000.00, up to 2 decimal places): Invalid amount. Example: 12.50. No signs or extra text.
+Amount in RM (0.01-1000.00, up to 2 decimal places): Invalid amount. Example: 12.50. No signs or extra text.
+Amount in RM (0.01-1000.00, up to 2 decimal places): Top up RM10.00?
+1. Confirm  2. Cancel: Transaction #1 | TOP UP | Demo funds | RM10.00
+Balance: RM10.00
+
+==================================================
+Balance: RM10.00
+1. Top up demo funds
+2. Pay a demo merchant
+3. View balance
+4. View transaction history
+5. About this simulation
+6. Exit
+Choose (1-6): Goodbye. Session ended; demo data is not saved.
